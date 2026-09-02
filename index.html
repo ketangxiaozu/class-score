@@ -6,310 +6,39 @@
 <meta name="theme-color" content="#2563eb">
 <title>课堂小组积分管理</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f3f6fb;color:#172033}
-button,input{font:inherit}
-button{cursor:pointer;border:0}
-.app{max-width:1200px;margin:auto;padding:14px}
-header{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 16px #0000000d;margin-bottom:14px}
-h1{margin:0 0 14px;font-size:25px}
-.classes{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-.class-btn{padding:12px 6px;border-radius:11px;background:#e9eef7;color:#24324a;font-weight:700}
-.class-btn.active{background:#2563eb;color:white}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.toolbar button,.primary{padding:11px 15px;border-radius:10px;background:#2563eb;color:white;font-weight:700}
-.toolbar .gray{background:#e8edf5;color:#24324a}
-.notice{font-size:13px;color:#64748b}
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
-.panel{background:#fff;border-radius:18px;padding:16px;box-shadow:0 3px 16px #0000000d}
-h2{margin:0 0 12px;font-size:19px}
-.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.card{border:1px solid #e2e8f0;border-radius:15px;padding:14px}
-.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-.name{font-size:18px;font-weight:800}
-.score{font-size:30px;font-weight:900;margin:8px 0}
-.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.actions button{padding:9px 3px;border-radius:8px;background:#eef3fb;color:#183153;font-weight:700}
-.actions .plus{background:#dbeafe;color:#1d4ed8}
-.actions .minus{background:#fee2e2;color:#b91c1c}
-.mini{display:flex;gap:6px;margin-top:10px}
-.mini button{padding:7px 10px;border-radius:8px;background:#f1f5f9}
-.member{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid #edf1f5;font-size:14px}
-.rank{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1f5}
-.rank:first-child{font-weight:800}
-.log{max-height:260px;overflow:auto;font-size:13px}
-.log div{padding:7px 0;border-bottom:1px solid #edf1f5}
-.empty{text-align:center;color:#94a3b8;padding:30px 5px}
-dialog{border:0;border-radius:18px;width:min(430px,calc(100% - 30px));padding:0;box-shadow:0 15px 50px #0004}
-dialog::backdrop{background:#0007}
-.modal{padding:20px}
-.modal h3{margin:0 0 14px}
-.modal input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:12px}
-.modal-actions{display:flex;gap:8px}
-.modal-actions button{flex:1;padding:11px;border-radius:10px}
-.cancel{background:#e2e8f0}
-.confirm{background:#2563eb;color:#fff}
-
-@media(max-width:800px){
-.classes{grid-template-columns:repeat(3,1fr)}
-.grid{grid-template-columns:1fr}
-.groups{grid-template-columns:1fr}
-}
-
-@media(max-width:430px){
-.app{padding:9px}
-h1{font-size:21px}
-.panel,header{padding:13px;border-radius:14px}
-.groups{gap:9px}
-.card{padding:12px}
-.actions{grid-template-columns:repeat(4,1fr)}
-.actions button{font-size:13px;padding:9px 1px}
-}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f3f6fb;color:#172033}button,input{font:inherit}button{cursor:pointer;border:0;-webkit-tap-highlight-color:transparent}.app{max-width:1200px;margin:auto;padding:14px}header,.panel{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 16px #0000000d;margin-bottom:14px}h1{margin:0 0 14px;font-size:25px}.classes{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.class-btn{padding:12px 6px;border-radius:11px;background:#e9eef7;color:#24324a;font-weight:700}.class-btn.active{background:#2563eb;color:#fff}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.toolbar button,.primary{padding:11px 15px;border-radius:10px;background:#2563eb;color:#fff;font-weight:700}.toolbar .gray{background:#e8edf5;color:#24324a}.notice{font-size:13px;color:#64748b}.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{border:1px solid #e2e8f0;border-radius:15px;padding:14px}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.name{font-size:18px;font-weight:800}.score{font-size:30px;font-weight:900;margin:8px 0}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.actions button{padding:9px 3px;border-radius:8px;background:#eef3fb;color:#183153;font-weight:700}.actions .plus{background:#dbeafe;color:#1d4ed8}.actions .minus{background:#fee2e2;color:#b91c1c}.mini{display:flex;gap:6px;margin-top:10px}.mini button,.iconbtn{padding:7px 10px;border-radius:8px;background:#f1f5f9}.member{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid #edf1f5;font-size:14px}.rank{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1f5}.rank:first-child{font-weight:800}.log{max-height:260px;overflow:auto;font-size:13px}.log div{padding:7px 0;border-bottom:1px solid #edf1f5}.empty{text-align:center;color:#94a3b8;padding:30px 5px}.modal-backdrop{display:none;position:fixed;inset:0;background:#0008;z-index:999;align-items:center;justify-content:center;padding:15px}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:18px;width:min(430px,100%);padding:20px;box-shadow:0 15px 50px #0004}.modal h3{margin:0 0 14px}.modal input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:12px;outline:none}.modal-actions{display:flex;gap:8px}.modal-actions button{flex:1;padding:11px;border-radius:10px}.cancel{background:#e2e8f0}.confirm{background:#2563eb;color:#fff}@media(max-width:800px){.classes{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}.groups{grid-template-columns:1fr}}@media(max-width:430px){.app{padding:9px}h1{font-size:21px}.panel,header{padding:13px;border-radius:14px}.groups{gap:9px}.card{padding:12px}.actions button{font-size:13px;padding:10px 1px}.class-btn{padding:11px 4px}}
 </style>
 </head>
-
 <body>
-<div class="app">
-
-<header>
-<h1>📚 课堂小组积分管理</h1>
-
-<div class="classes" id="classes"></div>
-
-<div class="toolbar">
-<button id="addGroup">＋ 添加小组</button>
-<button id="resetScores" class="gray">重置本班积分</button>
-</div>
-
-<div class="notice">
-当前班级：<b id="currentClass"></b>
-　数据自动保存在本设备浏览器中
-</div>
-</header>
-
-<div class="grid">
-
-<section class="panel">
-<h2>小组（<span id="groupCount">0</span>）</h2>
-<div id="groups" class="groups"></div>
-</section>
-
-<aside>
-
-<section class="panel">
-<h2>🏆 排行榜（<span id="rankCount">0</span>组）</h2>
-<div id="ranking"></div>
-</section>
-
-<section class="panel" style="margin-top:14px">
-<h2>📝 最近积分记录</h2>
-<div id="logs" class="log"></div>
-</section>
-
-</aside>
-</div>
-</div>
-
-<dialog id="dialog">
-<form method="dialog" class="modal" id="form">
-<h3 id="dialogTitle"></h3>
-<input id="input" autocomplete="off" required>
-<div class="modal-actions">
-<button value="cancel" class="cancel">取消</button>
-<button value="ok" class="confirm">确定</button>
-</div>
-</form>
-</dialog>
-
+<div class="app"><header><h1>📚 课堂小组积分管理</h1><div class="classes" id="classes"></div><div class="toolbar"><button id="addGroup">＋ 添加小组</button><button id="resetScores" class="gray">重置本班积分</button></div><div class="notice">当前班级：<b id="currentClass"></b>　数据自动保存在本设备浏览器中</div></header><div class="grid"><section class="panel"><h2>小组（<span id="groupCount">0</span>）</h2><div id="groups" class="groups"></div></section><aside><section class="panel"><h2>🏆 排行榜（<span id="rankCount">0</span>组）</h2><div id="best" style="font-weight:800;margin-bottom:8px"></div><div id="ranking"></div></section><section class="panel"><h2>📝 最近积分记录</h2><div id="logs" class="log"></div></section></aside></div></div>
+<div id="modal" class="modal-backdrop"><div class="modal"><h3 id="modalTitle"></h3><input id="modalInput" autocomplete="off"><div class="modal-actions"><button id="modalCancel" class="cancel">取消</button><button id="modalOK" class="confirm">确定</button></div></div></div>
 <script>
-
-const KEY="class_group_score_v5";
-
-const classNames=[
-"一班","二班","三班","四班","五班","六班"
-];
-
+(function(){
+"use strict";
+const KEY="class_group_score_final_v2";
+const classNames=["一班","二班","三班","四班","五班","六班"];
 const importedLists={
-
-"一班":[
-["陈义修","董少泽","郭希玥","王子墨"],
-["李敏赫","李玥汐","刘珝歌","刘轩宇"],
-["倪一楠","苏诗妍","涂景尧","王沫涵"],
-["向子沐","费士宸","叶昕霖","余乐雅"],
-["袁睿泽","赵桢祺","朱泽宜","周沐雅"],
-["李睿涵","王秋筠","余芃然","商长霖","童画"]
-],
-
-"六班":[
-["鲍梓奕","陈柿旭","邓愉霏","范粤毅"],
-["杨江昊","高煜杰","韩伊霈","雷昱辰"],
-["李金阳","李知然","林尔","刘忻瑾"],
-["刘子萱","梅舒雅","庞滢蕴","苏安吉"],
-["汪柏霖","谢知琦","谢知桐","张奕涵"],
-["周汀怡","朱泓屹","左亦可","杨苑意","谢佳邓"]
-]
-
+"一班":[["陈义修","董少泽","郭希玥","王子墨"],["李敏赫","李玥汐","刘珝歌","刘轩宇"],["倪一楠","苏诗妍","涂景尧","王沫涵"],["向子沐","费士宸","叶昕霖","余乐雅"],["袁睿泽","赵桢祺","朱泽宜","周沐雅"],["李睿涵","王秋筠","余芃然","商长霖","童画"]],
+"六班":[["鲍梓奕","陈柿旭","邓愉霏","范粤毅"],["杨江昊","高煜杰","韩伊霈","雷昱辰"],["李金阳","李知然","林尔","刘忻瑾"],["刘子萱","梅舒雅","庞滢蕴","苏安吉"],["汪柏霖","谢知琦","谢知桐","张奕涵"],["周汀怡","朱泓屹","左亦可","杨苑意","谢佳邓"]]
 };
-
-function defaultGroups(){
-
-return [1,2,3,4,5].map((n,i)=>({
-
-name:`第${["一","二","三","四","五"][i]}组`,
-score:0,
-
-members:[
-`学生${i*3+1}`,
-`学生${i*3+2}`,
-`学生${i*3+3}`
-]
-
-}));
-
-}
-
-let data=JSON.parse(localStorage.getItem(KEY)||"null");
-
-if(!data){
-
-data={};
-
-for(const c of classNames){
-
-if(importedLists[c]){
-
-data[c]={
-groups:importedLists[c].map((members,i)=>({
-
-name:`第${["一","二","三","四","五","六"][i]}组`,
-score:0,
-members:members
-
-})),
-logs:[]
-};
-
-}else{
-
-data[c]={
-groups:defaultGroups(),
-logs:[]
-};
-
-}
-
-}
-
-localStorage.setItem(KEY,JSON.stringify(data));
-
-}
-
-for(const c of classNames){
-
-if(!data[c]){
-
-data[c]={
-groups:[],
-logs:[]
-};
-
-}
-
-}
-
-let current=localStorage.getItem("currentClass")||"一班";
-
-let pending=null;
-
-const $=id=>document.getElementById(id);
-
-function save(){
-
-localStorage.setItem(KEY,JSON.stringify(data));
-localStorage.setItem("currentClass",current);
-
-}
-
-function esc(s){
-
-return String(s).replace(/[&<>"']/g,m=>({
-
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
-
-}[m]));
-
-}
-
-function render(){
-
-$("currentClass").textContent=current;
-
-$("classes").innerHTML=classNames.map(c=>`
-
-<button
-class="class-btn ${c===current?"active":""}"
-data-class="${c}">
-${c}
-</button>
-
-`).join("");
-
-const groups=data[current].groups;
-
-$("groups").innerHTML=groups.length?
-
-groups.map((g,i)=>`
-
-<div class="card">
-
-<div class="card-top">
-
-<div>
-
-<div class="name">${esc(g.name)}</div>
-
-<div class="score">${g.score}</div>
-
-</div>
-
-<div class="mini">
-
-<button data-edit-group="${i}">✏️</button>
-
-<button data-del-group="${i}">🗑️</button>
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button class="plus" data-score="${i}" data-n="1">+1</button>
-<button class="plus" data-score="${i}" data-n="2">+2</button>
-<button class="plus" data-score="${i}" data-n="5">+5</button>
-<button class="plus" data-score="${i}" data-n="10">+10</button>
-
-<button class="minus" data-score="${i}" data-n="-1">−1</button>
-<button class="minus" data-score="${i}" data-n="-2">−2</button>
-<button class="minus" data-score="${i}" data-n="-5">−5</button>
-<button class="minus" data-score="${i}" data-n="-10">−10</button>
-
-</div>
-
-<div style="margin-top:12px;font-weight:700">
-成员（${g.members.length}）
-</div>
-
-${g.members.map((m,j)=>`
-
-<div class="member">
-
-<span>${esc(m)}</span>
-
-<span>
-
-<button class="
+const cn=["一","二","三","四","五","六"];
+function sixGroups(c){return cn.map(function(n,i){return {name:"第"+n+"组",score:0,members:importedLists[c]?importedLists[c][i].slice():[]};});}
+function load(){let d=null;try{d=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}if(!d||typeof d!=="object")d={};classNames.forEach(function(c){if(!d[c]||!Array.isArray(d[c].groups))d[c]={groups:sixGroups(c),logs:[]};else{while(d[c].groups.length<6){let i=d[c].groups.length;d[c].groups.push({name:"第"+cn[i]+"组",score:0,members:[]});}d[c].groups.forEach(function(g){if(!g.name)g.name="小组";if(typeof g.score!=="number")g.score=Number(g.score)||0;if(!Array.isArray(g.members))g.members=[];});}if(!Array.isArray(d[c].logs))d[c].logs=[];});try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}return d;}
+let data=load(),current="一班",pending=null;
+try{current=localStorage.getItem("currentClass")||"一班"}catch(e){}
+if(!data[current])current="一班";
+const $=function(id){return document.getElementById(id)};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem("currentClass",current)}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]})}
+function render(){var groups=data[current].groups;$("currentClass").textContent=current;$("classes").innerHTML=classNames.map(function(c){return '<button class="class-btn '+(c===current?'active':'')+'" data-class="'+c+'">'+c+'</button>'}).join("");$("groupCount").textContent=groups.length;$("rankCount").textContent=groups.length;$("groups").innerHTML=groups.map(function(g,i){return '<div class="card"><div class="card-top"><div><div class="name">'+esc(g.name)+'</div><div class="score">'+g.score+'</div></div><div class="mini"><button class="iconbtn" data-edit-group="'+i+'">✏️</button><button class="iconbtn" data-del-group="'+i+'">🗑️</button></div></div><div class="actions"><button class="plus" data-score="'+i+'" data-n="1">+1</button><button class="plus" data-score="'+i+'" data-n="2">+2</button><button class="plus" data-score="'+i+'" data-n="5">+5</button><button class="plus" data-score="'+i+'" data-n="10">+10</button><button class="minus" data-score="'+i+'" data-n="-1">−1</button><button class="minus" data-score="'+i+'" data-n="-2">−2</button><button class="minus" data-score="'+i+'" data-n="-5">−5</button><button class="minus" data-score="'+i+'" data-n="-10">−10</button></div><div style="margin-top:12px;font-weight:700">成员（'+g.members.length+'）</div>'+g.members.map(function(m,j){return '<div class="member"><span>'+esc(m)+'</span><span><button class="iconbtn" data-edit-member="'+i+','+j+'">✏️</button><button class="iconbtn" data-del-member="'+i+','+j+'">🗑️</button></span></div>'}).join("")+'<div class="mini"><button data-add-member="'+i+'">＋ 添加学生</button></div></div>'}).join("");var sorted=groups.map(function(g,i){return {g:g,i:i}}).sort(function(a,b){return b.g.score-a.g.score});$("best").textContent=sorted.length?"🏆 当前最佳："+sorted[0].g.name+"（"+sorted[0].g.score+"分）":"";$("ranking").innerHTML=sorted.length?sorted.map(function(x,i){return '<div class="rank"><span>'+((i+1))+'. '+esc(x.g.name)+'</span><b>'+x.g.score+' 分</b></div>'}).join(""): '<div class="empty">暂无排行榜</div>';$('logs').innerHTML=data[current].logs.length?data[current].logs.slice().reverse().map(function(x){return '<div>'+esc(x)+'</div>'}).join(""):'<div class="empty">暂无记录</div>';}
+function ask(title,value,cb){pending=cb;$('modalTitle').textContent=title;$('modalInput').value=value||"";$('modal').classList.add('show');setTimeout(function(){$('modalInput').focus()},30)}
+function closeModal(){pending=null;$('modal').classList.remove('show')}
+$('modalCancel').onclick=closeModal;$('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});$('modalOK').onclick=function(){var v=$('modalInput').value.trim();if(v&&pending){var f=pending;pending=null;closeModal();f(v)}};$('modalInput').addEventListener('keydown',function(e){if(e.key==='Enter')$('modalOK').click()});
+$('classes').addEventListener('click',function(e){var b=e.target.closest('[data-class]');if(b){current=b.dataset.class;save();render()}});
+$('addGroup').onclick=function(){ask('添加小组','',function(name){data[current].groups.push({name:name,score:0,members:[]});data[current].logs.push('创建小组：'+name);save();render()})};
+$('resetScores').onclick=function(){if(window.confirm('确定重置'+current+'所有小组积分吗？')){data[current].groups.forEach(function(g){g.score=0});data[current].logs.push('重置本班所有积分');save();render()}};
+$('groups').addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;var i,n;if(t.dataset.score!==undefined){i=Number(t.dataset.score);n=Number(t.dataset.n);var g=data[current].groups[i];g.score+=n;data[current].logs.push(g.name+' '+(n>0?'+':'')+n+' 分（现在 '+g.score+' 分）');save();render();return}if(t.dataset.editGroup!==undefined){i=Number(t.dataset.editGroup);ask('修改小组名称',data[current].groups[i].name,function(name){data[current].groups[i].name=name;save();render()});return}if(t.dataset.delGroup!==undefined){i=Number(t.dataset.delGroup);var dg=data[current].groups[i];if(window.confirm('确定删除“'+dg.name+'”吗？')){data[current].groups.splice(i,1);save();render()}return}if(t.dataset.addMember!==undefined){i=Number(t.dataset.addMember);ask('添加学生姓名','',function(name){data[current].groups[i].members.push(name);save();render()});return}if(t.dataset.editMember){var a=t.dataset.editMember.split(',');i=Number(a[0]);n=Number(a[1]);ask('修改学生姓名',data[current].groups[i].members[n],function(name){data[current].groups[i].members[n]=name;save();render()});return}if(t.dataset.delMember){var b=t.dataset.delMember.split(',');i=Number(b[0]);n=Number(b[1]);var mn=data[current].groups[i].members[n];if(window.confirm('确定移除“'+mn+'”吗？')){data[current].groups[i].members.splice(n,1);save();render()}}});
+render();
+})();
+</script>
+</body></html>
