@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<title>课堂小组积分管理</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f3f6fb;color:#172033}
+button,input{font:inherit}button{cursor:pointer;border:0}.app{max-width:1200px;margin:auto;padding:14px}
+header{background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 16px #0000000d;margin-bottom:14px}
+h1{margin:0 0 14px;font-size:25px}.classes{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.class-btn{padding:12px 6px;border-radius:11px;background:#e9eef7;color:#24324a;font-weight:700}.class-btn.active{background:#2563eb;color:white}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.toolbar button,.primary{padding:11px 15px;border-radius:10px;background:#2563eb;color:white;font-weight:700}.toolbar .gray{background:#e8edf5;color:#24324a}
+.notice{font-size:13px;color:#64748b}.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}.panel{background:#fff;border-radius:18px;padding:16px;box-shadow:0 3px 16px #0000000d}h2{margin:0 0 12px;font-size:19px}
+.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{border:1px solid #e2e8f0;border-radius:15px;padding:14px}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.name{font-size:18px;font-weight:800}.score{font-size:30px;font-weight:900;margin:8px 0}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.actions button{padding:9px 3px;border-radius:8px;background:#eef3fb;color:#183153;font-weight:700}.actions .plus{background:#dbeafe;color:#1d4ed8}.actions .minus{background:#fee2e2;color:#b91c1c}.mini{display:flex;gap:6px;margin-top:10px}.mini button{padding:7px 10px;border-radius:8px;background:#f1f5f9}
+.member{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid #edf1f5;font-size:14px}.rank{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1f5}.rank:first-child{font-weight:800}
+.log{max-height:260px;overflow:auto;font-size:13px}.log div{padding:7px 0;border-bottom:1px solid #edf1f5}.empty{text-align:center;color:#94a3b8;padding:30px 5px}
+.modal-bg{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:15px;z-index:20}.modal-bg.show{display:flex}.modal{background:#fff;border-radius:18px;width:min(430px,100%);padding:20px;box-shadow:0 15px 50px #0004}.modal h3{margin:0 0 14px}.modal input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:12px}.modal-actions{display:flex;gap:8px}.modal-actions button{flex:1;padding:11px;border-radius:10px}.cancel{background:#e2e8f0}.confirm{background:#2563eb;color:#fff}
+.authbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#eff6ff;color:#1e3a8a;padding:10px 12px;border-radius:10px;margin-bottom:10px;font-size:14px}.auth-actions{display:flex;gap:6px;flex-wrap:wrap}.auth-actions button{padding:8px 11px;border-radius:8px;background:#fff;color:#1d4ed8;font-weight:700}
+.welcome{background:#fff;border-radius:18px;padding:22px;box-shadow:0 3px 16px #0000000d;margin-bottom:14px}.welcome h2{margin-top:0}.welcome input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:8px 0}.linkbox{background:#f8fafc;border:1px dashed #94a3b8;padding:12px;border-radius:10px;word-break:break-all;margin:10px 0}.success{color:#166534;font-weight:700}.hidden{display:none}
+@media(max-width:800px){.classes{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}.groups{grid-template-columns:1fr}}
+@media(max-width:430px){.app{padding:9px}h1{font-size:21px}.panel,header,.welcome{padding:13px;border-radius:14px}.groups{gap:9px}.card{padding:12px}.actions button{font-size:13px;padding:9px 1px}.authbar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<h1>📚 课堂小组积分管理</h1>
+<div id="authbar">正在连接云端…</div>
+<div id="workspacePanel"></div>
+</header>
+<div id="mainArea" class="hidden">
+<div class="classes" id="classes"></div>
+<div class="toolbar">
+<button id="addGroup">＋ 添加小组</button>
+<button id="resetScores" class="gray">重置本班积分</button>
+</div>
+<div class="notice">当前课堂：<b id="spaceName">—</b>　当前班级：<b id="currentClass">—</b>　<span id="cloudStatus">☁️ 云端同步</span></div>
+<div class="grid" style="margin-top:14px">
+<section class="panel"><h2>小组（<span id="groupCount">0</span>）</h2><div id="groups" class="groups"></div></section>
+<aside>
+<section class="panel"><h2>🏆 排行榜（<span id="rankCount">0</span>组）</h2><div id="best"></div><div id="ranking"></div></section>
+<section class="panel" style="margin-top:14px"><h2>📝 最近积分记录</h2><div id="logs" class="log"></div></section>
+</aside>
+</div>
+</div>
+</header>
+</div>
+<div id="modalBg" class="modal-bg"><div class="modal">
+<h3 id="modalTitle"></h3><input id="modalInput" autocomplete="off">
+<div class="modal-actions"><button class="cancel" id="modalCancel">取消</button><button class="confirm" id="modalOk">确定</button></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://quqjaaxzfndijpetuiuf.supabase.co";
+const SUPABASE_KEY="sb_publishable_YbXspLecnAXo4RLqrUE9Ug_ig-zhdBT";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const classNames=["一班","二班","三班","四班","五班","六班"];
+const importedLists={
+"一班":[["陈义修","董少泽","郭希玥","王子墨"],["李敏赫","李玥汐","刘珝歌","刘轩宇"],["倪一楠","苏诗妍","涂景尧","王沫涵"],["向子沐","费士宸","叶昕霖","余乐雅"],["袁睿泽","赵桢祺","朱泽宜","周沐雅"],["李睿涵","王秋筠","余芃然","商长霖","童画"]],
+"六班":[["鲍梓奕","陈柿旭","邓愉霏","范粤毅"],["杨江昊","高煜杰","韩伊霈","雷昱辰"],["李金阳","李知然","林尔","刘忻瑾"],["刘子萱","梅舒雅","庞滢蕴","苏安吉"],["汪柏霖","谢知琦","谢知桐","张奕涵"],["周汀怡","朱泓屹","左亦可","杨苑意","谢佳邓"]]};
+function defaultGroups(){return [1,2,3,4,5,6].map((n,i)=>({name:`第${["一","二","三","四","五","六"][i]}组`,score:0,members:[`学生${i*3+1}`,`学生${i*3+2}`,`学生${i*3+3}`]}))}
+function makeInitialData(){const d={};for(const c of classNames)d[c]={groups:defaultGroups(),logs:[]};for(const c of ["一班","六班"])d[c]={groups:importedLists[c].map((m,i)=>({name:`第${["一","二","三","四","五","六"][i]}组`,score:0,members:m})),logs:[]};return d}
+let data=makeInitialData(),current="一班",space=null,user=null,editing=false,pending=null;
+const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const codeFromUrl=()=>new URLSearchParams(location.search).get("space");
+function publicUrl(code){return location.origin+location.pathname+"?space="+encodeURIComponent(code)}
+function setModal(title,value,cb){pending=cb;$("modalTitle").textContent=title;$("modalInput").value=value||"";$("modalBg").classList.add("show");setTimeout(()=>$("modalInput").focus(),50)}
+function closeModal(){pending=null;$("modalBg").classList.remove("show")}
+$("modalCancel").onclick=closeModal;$("modalOk").onclick=()=>{const v=$("modalInput").value.trim();if(v&&pending){const f=pending;closeModal();f(v)}};
+$("modalInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("modalOk").click()});
+function renderAuth(){
+ if(!user){$("authbar").innerHTML='<div>👀 <b>学生查看模式</b>　无需登录，只能查看</div><div class="auth-actions"><button id="loginBtn">老师登录 / 注册</button></div>'}
+ else {$("authbar").innerHTML=`<div>👨‍🏫 <b>老师已登录</b>　${esc(user.email||"")}</div><div class="auth-actions"><button id="logoutBtn">退出登录</button></div>`}
+}
+function renderWorkspace(){
+ const p=$("workspacePanel");
+ if(!space){$("mainArea").classList.add("hidden");p.innerHTML=user?`<div class="welcome"><h2>🏫 创建我的课堂</h2><p>登录成功。创建后系统会自动生成一个专属学生网址，你直接复制给学生即可。</p><input id="spaceNameInput" placeholder="例如：娄老师的信息科技课堂"><button class="primary" id="createSpaceBtn">创建我的课堂</button></div>`:`<div class="welcome"><h2>🔐 老师使用</h2><p>老师登录后可以创建自己的课堂，并获得专属学生查看链接。</p></div>`;return}
+ $("mainArea").classList.remove("hidden");$("spaceName").textContent=space.name||"我的课堂";
+ $("cloudStatus").textContent=editing?"☁️ 云端同步 · 老师可编辑":"☁️ 云端同步 · 学生只读";
+ p.innerHTML=`<div class="authbar"><div>🔗 学生专属链接：<b>${esc(publicUrl(space.code))}</b></div><div class="auth-actions"><button id="copyLinkBtn">复制链接</button></div></div>`;
+}
+function render(){
+ $("currentClass").textContent=current;
+ $("classes").innerHTML=classNames.map(c=>`<button class="class-btn ${c===current?"active":""}" data-class="${c}">${c}</button>`).join("");
+ const groups=data[current]?.groups||[];$("groupCount").textContent=groups.length;$("rankCount").textContent=groups.length;
+ $("groups").innerHTML=groups.length?groups.map((g,i)=>`<div class="card"><div class="card-top"><div><div class="name">${esc(g.name)}</div><div class="score">${g.score}</div></div>${editing?`<div class="mini"><button data-edit-group="${i}">✏️</button><button data-del-group="${i}">🗑️</button></div>`:""}</div>${editing?`<div class="actions"><button class="plus" data-score="${i}" data-n="1">+1</button><button class="plus" data-score="${i}" data-n="2">+2</button><button class="plus" data-score="${i}" data-n="5">+5</button><button class="plus" data-score="${i}" data-n="10">+10</button><button class="minus" data-score="${i}" data-n="-1">−1</button><button class="minus" data-score="${i}" data-n="-2">−2</button><button class="minus" data-score="${i}" data-n="-5">−5</button><button class="minus" data-score="${i}" data-n="-10">−10</button></div>`:""}<div style="margin-top:12px;font-weight:700">成员（${g.members.length}）</div>${g.members.map((m,j)=>`<div class="member"><span>${esc(m)}</span>${editing?`<span><button data-edit-member="${i},${j}">✏️</button> <button data-del-member="${i},${j}">🗑️</button></span>`:""}</div>`).join("")}${editing?`<div class="mini"><button data-add-member="${i}">＋ 添加学生</button></div>`:""}</div>`).join(""):`<div class="empty">还没有小组。</div>`;
+ const sorted=[...groups].map((g,i)=>({...g,i})).sort((a,b)=>b.score-a.score);
+ $("ranking").innerHTML=sorted.length?sorted.map((g,i)=>`<div class="rank"><span>${i+1}. ${esc(g.name)}</span><b>${g.score} 分</b></div>`).join(""):`<div class="empty">暂无排行榜</div>`;
+ $("best").innerHTML=sorted.length?`<div style="padding:10px 0 12px;font-weight:800">🏆 当前最佳：${esc(sorted[0].name)}（${sorted[0].score}分）</div>`:"";
+ $("logs").innerHTML=(data[current]?.logs||[]).length?data[current].logs.slice().reverse().map(x=>`<div>${esc(x)}</div>`).join(""):`<div class="empty">暂无记录</div>`;
+}
+async function loadPublic(code){
+ const {data:rows,error}=await sb.rpc("get_public_class_data",{p_code:code});
+ if(error)throw error;
+ if(!rows||!rows.length)throw new Error("找不到这个课堂链接");
+ data=makeInitialData();
+ for(const r of rows)if(classNames.includes(r.class_name))data[r.class_name]=r.data;
+ space={id:null,name:rows[0].space_name,code:rows[0].space_code};
+ editing=false;
+}
+async function loadMySpace(){
+ if(!user)return;
+ const {data:s,error}=await sb.from("teacher_spaces_v2").select("id,name,code,owner_id").eq("owner_id",user.id).maybeSingle();
+ if(error)throw error;
+ if(s){space=s;await loadOwnData()}
+ else {space=null;data=makeInitialData()}
+}
+async function loadOwnData(){
+ const {data:rows,error}=await sb.from("class_data_v2").select("class_name,data").eq("space_id",space.id);
+ if(error)throw error;data=makeInitialData();for(const r of rows||[])if(classNames.includes(r.class_name))data[r.class_name]=r.data;editing=true;
+}
+async function createSpace(){
+ const name=$("spaceNameInput").value.trim()||"我的课堂";
+ let code;for(let k=0;k<10;k++){code=Math.random().toString(36).slice(2,8).toUpperCase();const {data:x}=await sb.from("teacher_spaces_v2").select("id").eq("code",code).maybeSingle();if(!x)break}
+ const {data:s,error}=await sb.from("teacher_spaces_v2").insert({owner_id:user.id,name,code}).select().single();
+ if(error)throw error;space=s;editing=true;
+ // Try to preserve the old single-teacher cloud data if it exists.
+ const old=await sb.from("class_data").select("class_name,data");
+ if(!old.error&&old.data&&old.data.length){for(const r of old.data.filter(x=>classNames.includes(x.class_name))){data[r.class_name]=r.data}}
+ for(const c of classNames){const {error:e}=await sb.from("class_data_v2").insert({space_id:space.id,class_name:c,data:data[c]});if(e)throw e}
+ history.replaceState({},'',location.pathname+"?space="+encodeURIComponent(space.code));
+ renderAuth();renderWorkspace();render();
+ alert("课堂创建成功！专属学生链接已经生成。")
+}
+async function saveClass(){if(!editing||!space)return;const {error}=await sb.from("class_data_v2").upsert({space_id:space.id,class_name:current,data:data[current],updated_at:new Date().toISOString()});if(error)throw error}
+$("authbar").addEventListener("click",async e=>{if(e.target.id==="loginBtn")showLogin();if(e.target.id==="logoutBtn"){await sb.auth.signOut();location.href=location.pathname}});
+function showLogin(){
+ $("workspacePanel").innerHTML=`<div class="welcome"><h2>👨‍🏫 老师登录 / 注册</h2><input id="email" type="email" placeholder="邮箱" autocomplete="email"><input id="password" type="password" placeholder="密码（至少6位）" autocomplete="current-password"><div class="auth-actions"><button class="primary" id="doLogin">登录</button><button id="doSignup">注册新老师账号</button></div><p class="notice">老师账号只用于管理自己的课堂；学生不需要登录。</p></div>`;
+}
+$("workspacePanel").addEventListener("click",async e=>{
+ if(e.target.id==="doLogin"){const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)alert("登录失败："+error.message)}
+ if(e.target.id==="doSignup"){const email=$("email").value.trim(),password=$("password").value;if(!email||password.length<6)return alert("请输入邮箱和至少6位密码");const {error}=await sb.auth.signUp({email,password,emailRedirectTo:location.href});if(error)alert("注册失败："+error.message);else alert("注册成功！如果开启邮箱确认，请先去邮箱确认。")}
+ if(e.target.id==="createSpaceBtn"){try{await createSpace()}catch(err){alert("创建失败："+err.message)}}
+ if(e.target.id==="copyLinkBtn"){try{await navigator.clipboard.writeText(publicUrl(space.code));alert("学生链接已复制")}catch(_){prompt("请复制这个学生链接：",publicUrl(space.code))}}
+});
+$("classes").addEventListener("click",async e=>{const b=e.target.closest("[data-class]");if(!b)return;current=b.dataset.class;render()});
+$("addGroup").onclick=()=>{if(!editing)return;setModal("添加小组","",async name=>{data[current].groups.push({name,score:0,members:[]});data[current].logs.push(`创建小组：${name}`);render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}})};
+$("resetScores").onclick=async()=>{if(!editing)return;if(confirm(`确定重置${current}所有小组积分吗？`)){data[current].groups.forEach(g=>g.score=0);data[current].logs.push("重置本班所有积分");render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}}};
+$("groups").addEventListener("click",async e=>{const t=e.target.closest("button");if(!t||!editing)return;let i,n;
+if(t.dataset.score){i=+t.dataset.score;n=+t.dataset.n;const g=data[current].groups[i];g.score+=n;data[current].logs.push(`${g.name} ${n>0?"+":""}${n} 分（现在 ${g.score} 分）`);render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}}
+else if(t.dataset.editGroup!==undefined){i=+t.dataset.editGroup;setModal("修改小组名称",data[current].groups[i].name,async name=>{data[current].groups[i].name=name;render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}})}
+else if(t.dataset.delGroup!==undefined){i=+t.dataset.delGroup;const g=data[current].groups[i];if(confirm(`确定删除“${g.name}”吗？`)){data[current].groups.splice(i,1);render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}}}
+else if(t.dataset.addMember!==undefined){i=+t.dataset.addMember;setModal("添加学生姓名","",async name=>{data[current].groups[i].members.push(name);render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}})}
+else if(t.dataset.editMember){[i,n]=t.dataset.editMember.split(",").map(Number);setModal("修改学生姓名",data[current].groups[i].members[n],async name=>{data[current].groups[i].members[n]=name;render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}})}
+else if(t.dataset.delMember){[i,n]=t.dataset.delMember.split(",").map(Number);const name=data[current].groups[i].members[n];if(confirm(`确定移除“${name}”吗？`)){data[current].groups[i].members.splice(n,1);render();try{await saveClass()}catch(e){alert("保存失败："+e.message)}}}
+});
+async function boot(){
+ const {data:{session}}=await sb.auth.getSession();user=session?.user||null;renderAuth();
+ const code=codeFromUrl();
+ if(code){try{await loadPublic(code);if(user){const {data:s}=await sb.from("teacher_spaces_v2").select("id,name,code,owner_id").eq("code",code).maybeSingle();if(s&&s.owner_id===user.id){space=s;await loadOwnData();editing=true}}renderWorkspace();render()}catch(e){$("workspacePanel").innerHTML=`<div class="welcome"><h2>❌ 课堂链接无效</h2><p>${esc(e.message)}</p><button class="primary" onclick="location.href=location.pathname">返回</button></div>`}}
+ else if(user){try{await loadMySpace();renderWorkspace();render()}catch(e){$("workspacePanel").innerHTML=`<div class="welcome"><h2>❌ 连接失败</h2><p>${esc(e.message)}</p></div>`}}
+ else {renderWorkspace()}
+ sb.auth.onAuthStateChange(async(_event,s)=>{user=s?.user||null;renderAuth();try{if(user){if(code){const {data:mine}=await sb.from("teacher_spaces_v2").select("id,name,code,owner_id").eq("code",code).eq("owner_id",user.id).maybeSingle();if(mine){space=mine;await loadOwnData();editing=true}else editing=false}else await loadMySpace()}else if(code){await loadPublic(code)}else{space=null;editing=false;data=makeInitialData()}}catch(e){console.error(e)}renderWorkspace();render()});
+}
+boot().catch(e=>{console.error(e);$("workspacePanel").innerHTML=`<div class="welcome"><h2>❌ 初始化失败</h2><p>${esc(e.message)}</p></div>`});
+</script>
+</body>
+</html>
